@@ -88,3 +88,18 @@ $${content}
     content = "${join("\n", data.template_file.config_map_eni_config_part.*.rendered)}"
   }
 }
+
+# Render out a convenient autoscaler helm values file
+data "template_file" "autoscaler_manifest" {
+  template = "${file("${path.module}/templates/autoscaler-values.yaml.tpl")}"
+
+  vars {
+    region       = "${data.aws_region.current.name}"
+    cluster_name = "${var.cluster_name}"
+  }
+}
+
+resource "local_file" "autoscaler_manifest" {
+  content  = "${data.template_file.autoscaler_manifest.rendered}"
+  filename = "${local.asset_dir}/manifests/autoscaler/values.yaml"
+}
