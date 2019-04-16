@@ -54,6 +54,11 @@ output "kubeconfig_filename" {
   value       = "${element(concat(local_file.kubeconfig.*.filename, list("")), 0)}"
 }
 
+output "kubeconfig_name" {
+  description = "The kubeconfig cluster context name"
+  value       = "${local.kubeconfig_name}"
+}
+
 output "workers_asg_arns" {
   description = "IDs of the autoscaling groups containing workers."
   value       = "${concat(aws_autoscaling_group.workers.*.arn, aws_autoscaling_group.workers_launch_template.*.arn)}"
